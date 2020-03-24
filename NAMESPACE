@@ -1,0 +1,5 @@
+exportPattern("^[[:alpha:]]+")
+import(sp)
+import(GWmodel)
+import(nsprcomp)
+importFrom("methods", "as", "is")
