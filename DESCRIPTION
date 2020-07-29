@@ -2,7 +2,7 @@ Package: GWnnegPCA
 Type: Package
 Title: Geographically Weighted Non-Negative Principal Components
         Analysis
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     c(person(given = "Narumasa",
              family = "Tsutsumida",
@@ -19,9 +19,9 @@ Imports: sp, sf, GWmodel, nsprcomp, methods
 SystemRequirements: C++11, GDAL (>= 2.0.1), GEOS (>= 3.4.0), PROJ (>=
         4.8.0)
 NeedsCompilation: no
-Packaged: 2020-03-21 14:01:02 UTC; nt
+Packaged: 2020-07-29 07:24:14 UTC; nt
 Author: Narumasa Tsutsumida [aut, cre]
     (<https://orcid.org/0000-0002-6333-0301>)
 Maintainer: Narumasa Tsutsumida <rsnaru.jp@gmail.com>
 Repository: CRAN
-Date/Publication: 2020-03-24 15:50:02 UTC
+Date/Publication: 2020-07-29 08:22:06 UTC

@@ -95,8 +95,8 @@ gw_nsprcomp <- function (data, elocat, vars, bw, k = 2, kernel, adaptive = TRUE,
     temp <- w_nsprcomp(x = x[use, ], wt, ncomp = k, k = ncol(x),
                        nneg, localcenter, localscale)
     load[i, , ] <- matrix(temp$rotation, ncol = k, nrow = var.n)
-    score.all[use, ] <- temp$x[, 1:k]
-    s[i, ] <- score.all[i, ]
+    score.all[use, ] <- (as.matrix(x[use,]) %*% as.matrix(temp$rotation))[,1:k]
+    s[i,] <- score.all[i,]
     sdev[i, ] <- temp$sdev
   }
   if (!is.null(rownames(x)))
