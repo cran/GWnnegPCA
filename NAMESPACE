@@ -1,5 +1,7 @@
 exportPattern("^[[:alpha:]]+")
 import(sp)
-import(GWmodel)
+import(geodist)
+import(pracma)
 import(nsprcomp)
+import(spData)
 importFrom("methods", "as", "is")

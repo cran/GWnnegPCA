@@ -3,8 +3,9 @@
 \title{Geographically Weighted non-negative Principal Component Analysis}
 \usage{
 gw_nsprcomp(data, elocat, vars, bw, k = 2, kernel, adaptive = TRUE,
-          p = 2, theta = 0, longlat = FALSE, dMat = NULL, n.obs = NA,
-          n.iter = 1, ncomp = k, nneg = TRUE, localcenter = TRUE, localscale = FALSE,...)
+          p = 2, theta = 0, longlat = FALSE, geodisic_measure = "cheap",
+          dMat = NULL, n.obs = NA, n.iter = 1, ncomp = k, nneg = TRUE,
+          localcenter = TRUE, localscale = FALSE,...)
 }
 \description{
 Implementation of geographically weighted non-negative principal component analysis, whcih consists of the fusion of GWPCA and sparse non-negative PCA.
@@ -60,6 +61,9 @@ an angle in radians to rotate the coordinate system, default is 0.
   \item{longlat}{
 if TRUE, great circle distances will be calculated.
 
+}
+  \item{geodisic_measure}{
+geodisic_measure is used when latlon coordinate. The distance is cauclated by geodist::geodist(). One of "haversine" "vincenty", "geodesic", or "cheap" specifying desired method of geodesic distance calculation. "Cheap" is the fastest way but may have errors if the ROI is large.
 }
   \item{dMat}{
 a pre-specified distance matrix, it can be calculated by the function gw.dist .
@@ -123,58 +127,39 @@ N. Tsutsumida
 
 \examples{
 
-### This example implements the GWnnegPCA for the same data used in the GWmodel example.
-\donttest{
-library(GWmodel)
-data(DubVoter)
-Data.scaled <- scale(as.matrix(Dub.voter@data[, 4:11]))
-Coords <- as.matrix(cbind(Dub.voter$X, Dub.voter$Y))
-Data.scaled.spdf <- SpatialPointsDataFrame(Coords, as.data.frame(Data.scaled))
+### This example is for demonstrating GWnnegPCA only.
+### The application does not imply any reasonable meanings.
 
-bw_gwnnegpca_ans <- 200
+library(sp)
+library(spData)
+library(sf)
+
+boston <- as(st_read(system.file("shapes/boston_tracts.shp",
+                                 package="spData")[1]), "Spatial")
+Data.scaled <- scale(as.matrix(boston@data[, c("AGE","RAD","TAX")]))
+Coords <- as.matrix(cbind(boston$LON, boston$LAT))
+Data.scaled.spdf <- SpatialPointsDataFrame(Coords, as.data.frame(Data.scaled))
 
 gwnnegpca_ans <- gw_nsprcomp(
   data = Data.scaled.spdf,
   vars = colnames(Data.scaled.spdf@data),
-  bw = bw_gwnnegpca_ans,
-  k = 8,
+  bw = 0.25,
+  k = 3,
+  longlat = TRUE,
   kernel="bisquare",
   adaptive = TRUE,
   nneg=TRUE,
   center=FALSE
 )
 
-Dub.voter$gwnnegpcaload_DiffAdd <- gwnnegpca_ans$loadings[,"DiffAdd","PC1"]
-Dub.voter$gwnnegpcaload_LARent <- gwnnegpca_ans$loadings[,"LARent","PC1"]
-Dub.voter$gwnnegpcaload_SC1 <- gwnnegpca_ans$loadings[,"SC1","PC1"]
+boston$PC1_load_AGE <- gwnnegpca_ans$loadings[,"AGE","PC1"]
+boston$PC1_load_RAD <- gwnnegpca_ans$loadings[,"RAD","PC1"]
+boston$PC1_load_TAX <- gwnnegpca_ans$loadings[,"TAX","PC1"]
 
-spplot(Dub.voter[c("gwnnegpcaload_DiffAdd","gwnnegpcaload_LARent","gwnnegpcaload_SC1")])
+plot(st_as_sf(boston)[,c("PC1_load_AGE","PC1_load_RAD","PC1_load_TAX")])
 
-### Compare with standard gwpca
-bw_gwpca_ans <- bw.gwpca(
-  Data.scaled.spdf,
-  vars = colnames(Data.scaled.spdf@data),
-  k = 3,
-  robust = FALSE,
-  adaptive = TRUE
-)
 
-gwpca_ans <- gwpca(
-  Data.scaled.spdf,
-  vars = colnames(Data.scaled.spdf@data),
-  bw = bw.gwpca.basic,
-  k = 8,
-  robust = FALSE,
-  adaptive = TRUE
-)
 
-Dub.voter$gwpcaload_DiffAdd <- gwpca_ans$loadings[,"DiffAdd","PC1"]
-Dub.voter$gwpcaload_LARent <- gwpca_ans$loadings[,"LARent","PC1"]
-Dub.voter$gwpcaload_SC1 <- gwpca_ans$loadings[,"SC1","PC1"]
-
-spplot(Dub.voter[c("gwpcaload_DiffAdd","gwpcaload_LARent","gwpcaload_SC1")])
-
-}
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the
