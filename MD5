@@ -1,5 +1,7 @@
-69b39cc4228adf1b97754bdda7129f32 *DESCRIPTION
-4bf00c00e34499ed486e6c8cb97457a2 *NAMESPACE
-ca23d9f51d54caef89c6e65c47109c44 *R/gw_nsprcomp.R
+f4340735e10a4b1d0c231364be888355 *DESCRIPTION
+9d462b2c2950875c4447a73fe8fafb83 *NAMESPACE
+3369dbd9ad9071a6199865d6974c323a *R/gw_nsprcomp.R
 c7f9e6e724c82e0ee181d282cb80c9e0 *README.md
-2c80c7fa343d24f7679cf70cb2d12b14 *man/gw_nsprcomp.Rd
+1713e9ceaafad18affad53c6c8ef6b66 *man/gw_nsprcomp.Rd
+82f78194b391aafc34609ed772289960 *tests/testthat.R
+102ce85d6014b45cd6f509f296f0a0c3 *tests/testthat/test-gw_nsprcomp.R
